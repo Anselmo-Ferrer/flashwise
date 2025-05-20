@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  name     String
+  password String
+  resumos  Resumo[]
+}
+
+model Resumo {
+  id         String     @id @default(uuid())
+  titulo     String
+  texto      String
+  userId     String
+  createdAt  DateTime   @default(now())
+  user       User       @relation(fields: [userId], references: [id])
+  flashcards Flashcard[]
+  perguntas  Pergunta[]
+}
+
+model Flashcard {
+  id        String   @id @default(uuid())
+  pergunta  String
+  resposta  String
+  resumoId  String
+  resumo    Resumo   @relation(fields: [resumoId], references: [id])
+}
+
+model Pergunta {
+  id            String   @id @default(uuid())
+  enunciado     String
+  alternativaA  String
+  alternativaB  String
+  alternativaC  String
+  alternativaD  String
+  correta       String
+  explicacao    String
+  resumoId      String
+  resumo        Resumo   @relation(fields: [resumoId], references: [id])
+}
