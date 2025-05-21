@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import PDFuploader from '@/components/PDFUploader'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -29,6 +30,11 @@ export default function DashboardPage() {
 
   if (loading) return <p className="p-8">Verificando autenticação...</p>
 
+  const handlePDF = (file: File) => {
+
+    console.log(`Arquivo selecionado: ${file}`)
+  }
+
   return (
     <div className="p-8 space-y-4">
       <h1 className="text-3xl font-bold">Welcome to your dashboard!</h1>
@@ -40,6 +46,10 @@ export default function DashboardPage() {
       >
         Sair
       </button>
+      <div className="p-8 space-y-6">
+        <h1 className="text-2xl font-bold">Upload de PDF</h1>
+        <PDFuploader onFileSelect={handlePDF} />
+      </div>
     </div>
   )
 }
