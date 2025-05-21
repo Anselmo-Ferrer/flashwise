@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import PDFuploader from '@/components/PDFUploader'
+import SummaryGenerator from '@/components/SummaryGenerator'
 
 export default function DashboardPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [userEmail, setUserEmail] = useState('')
+
+  const [textoExtraido, setTextoExtraido] = useState('')
 
   useEffect(() => {
     const checkSession = async () => {
@@ -47,6 +50,7 @@ export default function DashboardPage() {
     }
 
     const data = await res.json()
+    setTextoExtraido(data.text)
     console.log(data)
   }
 
@@ -65,6 +69,7 @@ export default function DashboardPage() {
         <h1 className="text-2xl font-bold">Upload de PDF</h1>
         <PDFuploader onFileSelect={handlePDF} />
       </div>
+      {textoExtraido && <SummaryGenerator texto={textoExtraido} />}
     </div>
   )
 }
