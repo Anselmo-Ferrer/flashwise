@@ -30,9 +30,24 @@ export default function DashboardPage() {
 
   if (loading) return <p className="p-8">Verificando autenticação...</p>
 
-  const handlePDF = (file: File) => {
+  const handlePDF = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
 
-    console.log(`Arquivo selecionado: ${file}`)
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    })
+
+    if (!res.ok) {
+      const errorText = await res.text()
+      console.error('Erro na API:', errorText)
+      alert('Falha ao processar PDF')
+      return
+    }
+
+    const data = await res.json()
+    console.log(data)
   }
 
   return (
