@@ -123,7 +123,7 @@ export default function DashboardPage() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        resumoId: resumoId, // agora é o real
+        resumoId: resumoId,
         flashcards: flashcards
       }),
     })
@@ -139,19 +139,34 @@ export default function DashboardPage() {
 const handleGenerateQuiz = async () => {
   setLoading(true)
 
-  const res = await fetch('/api/generate-quiz', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      texto: textoExtraido,
-      nivel: 'difícil',
-      quantidade: 5
-    }),
-  })
+  try {
+    const res = await fetch('/api/generate-quiz', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        texto: textoExtraido,
+        nivel: 'difícil',
+        quantidade: 5
+      }),
+    })
 
-  const data = await res.json();
-  const quiz = data.perguntas
-  console.log(quiz)
+    const data = await res.json();
+    const quiz = data.perguntas
+
+    await fetch('/api/save-quiz', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        resumoId: resumoId,
+        quiz: quiz
+      }),
+    })
+
+     console.log('quiz salvo com sucesso!')
+  } catch (error) {
+    console.error('Erro ao gerar/salvar quiz:', error)
+  }
+
   setLoading(false)
 }
 
