@@ -12,6 +12,7 @@ export default function DashboardPage() {
   const [userId, setUserId] = useState('')
   const [textoExtraido, setTextoExtraido] = useState('')
   const [resumo, setResumo] = useState('')
+  const [resumoId, setResumoId] = useState('')
 
   useEffect(() => {
     const checkSession = async () => {
@@ -78,7 +79,7 @@ export default function DashboardPage() {
       const resumoGerado = data.resumo
       setResumo(resumoGerado)
 
-      await fetch('/api/save-summary', {
+      const saveRes = await fetch('/api/save-summary', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -87,6 +88,10 @@ export default function DashboardPage() {
           userId: userId,
         }),
       })
+
+      const { summary } = await saveRes.json()
+      const resumoIdGerado = summary.id
+      setResumoId(resumoIdGerado)
     } catch (error) {
       console.error('Erro ao gerar ou salvar o resumo:', error)
       alert('Erro ao gerar ou salvar o resumo.')
@@ -94,6 +99,42 @@ export default function DashboardPage() {
 
     setLoading(false)
   }
+
+
+  const handleGenerateFlashcards = async () => {
+  setLoading(true)
+
+  try {
+    const res = await fetch('/api/generate-flashcards', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        texto: textoExtraido,
+        nivel: 'difícil',
+        quantidade: 5
+      }),
+    })
+
+    const data = await res.json()
+    const flashcards = data.flashcards
+
+    // Salvar no banco
+    await fetch('/api/save-flashcards', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        resumoId: resumoId, // agora é o real
+        flashcards: flashcards
+      }),
+    })
+
+    console.log('Flashcards salvos com sucesso!')
+  } catch (error) {
+    console.error('Erro ao gerar/salvar flashcards:', error)
+  }
+
+  setLoading(false)
+}
 
   if (loading) return <p className="p-8">Verificando autenticação...</p>
 
@@ -122,6 +163,13 @@ export default function DashboardPage() {
             disabled={loading}
           >
             {loading ? 'Gerando resumo...' : 'Gerar Resumo'}
+          </button>
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+            onClick={handleGenerateFlashcards}
+            disabled={loading}
+          >
+            {loading ? 'Gerando Flashcard...' : 'Gerar Flashcard'}
           </button>
 
           {resumo && (
