@@ -44,6 +44,7 @@ model Pergunta {
   alternativaD  String
   correta       String
   explicacao    String
+  nivel         String 
   resumoId      String
   resumo        Resumo   @relation(fields: [resumoId], references: [id])
 }
