@@ -136,6 +136,25 @@ export default function DashboardPage() {
   setLoading(false)
 }
 
+const handleGenerateQuiz = async () => {
+  setLoading(true)
+
+  const res = await fetch('/api/generate-quiz', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      texto: textoExtraido,
+      nivel: 'difícil',
+      quantidade: 5
+    }),
+  })
+
+  const data = await res.json();
+  const quiz = data.perguntas
+  console.log(quiz)
+  setLoading(false)
+}
+
   if (loading) return <p className="p-8">Verificando autenticação...</p>
 
   return (
@@ -170,6 +189,13 @@ export default function DashboardPage() {
             disabled={loading}
           >
             {loading ? 'Gerando Flashcard...' : 'Gerar Flashcard'}
+          </button>
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+            onClick={handleGenerateQuiz}
+            disabled={loading}
+          >
+            {loading ? 'Gerando quiz...' : 'Gerar quiz'}
           </button>
 
           {resumo && (
