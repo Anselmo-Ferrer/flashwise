@@ -30,6 +30,7 @@ model Flashcard {
   id        String   @id @default(uuid())
   pergunta  String
   resposta  String
+  nivel     String
   resumoId  String
   resumo    Resumo   @relation(fields: [resumoId], references: [id])
 }
