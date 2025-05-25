@@ -13,9 +13,9 @@ export async function POST(req: Request) {
       data: flashcards.map((card: any) => ({
         pergunta: card.pergunta,
         resposta: card.resposta,
-        resumoId: resumoId,
         nivel: card.nivel,
-      })),
+        resumoId: resumoId,
+      }))
     })
 
     return NextResponse.json({ created }, { status: 201 })
