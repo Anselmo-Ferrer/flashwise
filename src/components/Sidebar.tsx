@@ -29,7 +29,9 @@ export default function Sidebar() {
 
   return (
     <aside className="bg-white py-10 pr-5 pl-1 w-64 z-100 rounded-xl">
-      <h1>logo</h1>
+      <div className="flex justify-center">
+        <h1 className="text-black font-semibold text-[25px]">Flashwise</h1>
+      </div>
       <div className=" h-full flex flex-col justify-between py-4">
         <nav className="flex flex-col gap-2 mt-4">
             {links.map((item, i) => {
