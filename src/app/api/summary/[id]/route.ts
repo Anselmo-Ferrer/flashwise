@@ -1,12 +1,11 @@
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
-// Função com estrutura correta para acessar `params` no App Router (API route)
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const id = params.id
+  const { id } = await context.params
 
   if (!id) {
     return NextResponse.json({ error: 'Missing summary ID' }, { status: 400 })
