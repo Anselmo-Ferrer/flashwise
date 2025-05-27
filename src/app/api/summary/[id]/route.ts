@@ -17,8 +17,10 @@ export async function GET(
       select: {
         id: true,
         titulo: true,
+        subtitulo: true,
         texto: true,
-        createdAt: true,
+        estrutura: true,
+        createdAt: true
       },
     })
 
@@ -30,5 +32,29 @@ export async function GET(
   } catch (error) {
     console.error('Erro ao buscar resumo por ID:', error)
     return NextResponse.json({ error: 'Erro interno ao buscar resumo' }, { status: 500 })
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing summary ID' }, { status: 400 })
+  }
+
+  try {
+    await prisma.pergunta.deleteMany({ where: { resumoId: id } })
+
+    await prisma.flashcard.deleteMany({ where: { resumoId: id } })
+
+    await prisma.resumo.delete({ where: { id } })
+
+    return NextResponse.json({ message: 'Resumo deletado com sucesso' })
+  } catch (error) {
+    console.error('Erro ao deletar resumo:', error)
+    return NextResponse.json({ error: 'Erro interno ao deletar resumo' }, { status: 500 })
   }
 }
