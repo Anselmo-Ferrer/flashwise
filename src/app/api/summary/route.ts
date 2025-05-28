@@ -16,9 +16,9 @@ export async function GET(req: Request) {
       select: {
         id: true,
         titulo: true,
-        texto: true,
+        subtitulo: true,
         createdAt: true
-      }
+      },
     })
 
     return NextResponse.json({ summary })

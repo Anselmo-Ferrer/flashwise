@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(req: Request) {
   try {
-    const { resumoId, quiz} = await req.json()
+    const { resumoId, quiz } = await req.json()
 
     if (!resumoId || !quiz || !Array.isArray(quiz)) {
       return NextResponse.json({ error: 'Missing or invalid fields' }, { status: 400 })
