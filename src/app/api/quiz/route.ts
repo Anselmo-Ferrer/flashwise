@@ -3,36 +3,30 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const userId = searchParams.get('userId')
+  const resumoId = searchParams.get('resumoId')
 
-  if (!userId) {
+  if (!resumoId) {
     return NextResponse.json({ error: 'Missing userId' }, { status: 400})
   }
 
   try {
-    const summary = await prisma.resumo.findMany({
-      where: { userId },
+    const perguntas = await prisma.pergunta.findMany({
+      where: { resumoId },
+      orderBy: { id: "asc" },
       select: {
         id: true,
-        titulo: true,
-        perguntas: {
-          orderBy: { id: "asc" },
-          select: {
-            id: true,
-            enunciado: true,
-            alternativaA:true,
-            alternativaB: true,
-            alternativaC: true,
-            alternativaD: true,
-            correta: true,
-            explicacao: true,
-          }
-        }
-      },
-      orderBy: { createdAt: "desc"}
+        enunciado: true,
+        alternativaA: true,
+        alternativaB: true,
+        alternativaC: true,
+        alternativaD: true,
+        correta: true,
+        explicacao: true,
+        nivel: true
+      }
     })
 
-    return NextResponse.json({ summary })
+    return NextResponse.json({ perguntas })
   } catch (error) {
     console.error("Erro ao buscar flashcards agrupados:", error);
     return NextResponse.json({ error: "Erro interno ao buscar flashcards" }, { status: 500 });

@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     - "explicacao": uma explicação clara sobre a resposta correta.
     - "nivel": defina como "${nivel}".
 
-    Retorne apenas o array JSON, sem nenhum comentário, explicação ou texto fora do JSON.
+    Retorne apenas o array JSON puro, sem crases, sem blocos de código, sem texto explicativo. Apenas o JSON.
 
     Formato de exemplo:
     [
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'meta-llama/llama-3.3-8b-instruct:free',
+      model: 'mistralai/devstral-small:free',
       messages: [
         {
           role: 'user',
@@ -56,13 +56,23 @@ export async function POST(req: Request) {
   });
 
   const data = await response.json();
-  const raw = data.choices?.[0]?.message?.content || '[]';
+  const content = data.choices?.[0]?.message?.content || ''
+const match = content.match(/\[\s*{[\s\S]*?}\s*]/)
 
-  try {
-    const perguntas = JSON.parse(raw);
-    return NextResponse.json({ perguntas });
-  } catch (error) {
-    console.error('Erro ao fazer parse do JSON:', error);
-    return NextResponse.json({ error: 'Erro ao fazer parse do JSON gerado' }, { status: 500 });
-  }
+if (!match) {
+  return NextResponse.json({ error: 'Formato inválido retornado pela IA' }, { status: 500 })
+}
+
+try {
+  const cleaned = match[0]
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // remove control characters
+    .replace(/\\n/g, ' ') // remove quebras de linha desnecessárias
+    .replace(/\\"/g, '"') // desescapa aspas duplas
+
+  const perguntas = JSON.parse(cleaned)
+  return NextResponse.json({ perguntas })
+} catch (error) {
+  console.error('Erro ao fazer parse do JSON:', error)
+  return NextResponse.json({ error: 'Erro ao fazer parse do JSON gerado' }, { status: 500 })
+}
 }
