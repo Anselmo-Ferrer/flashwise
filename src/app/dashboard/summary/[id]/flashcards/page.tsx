@@ -22,7 +22,7 @@ export default function FlashcardsPage() {
 
     const fetchFlashcards = async () => {
       try {
-        const res = await fetch(`/api/flashcards?resumoId=${id}`)
+        const res = await fetch(`/api/flashcards/${id}`)
         if (!res.ok) throw new Error('Erro ao buscar flashcards')
 
         const data = await res.json()

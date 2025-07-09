@@ -10,6 +10,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing Fields' }, { status: 400 });
     }
 
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 400 });
+    }
+
     const summary = await prisma.resumo.create({
       data: {
         titulo,
