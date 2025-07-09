@@ -77,13 +77,16 @@ const handleDeleteSummary = async (summaryId: string) => {
         setUserId(id || '')
 
         // Sincroniza o usuário no banco
-        await fetch('/api/sync-user', {
+        const res = await fetch('/api/sync-user', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id, email, name: '', password: '' })
         })
 
-        await handleGetSummary(id)
+        const data = await res.json()
+        console.log(data)
+
+        await handleGetSummary(data.user.id)
         setLoading(false)
       }
     }
