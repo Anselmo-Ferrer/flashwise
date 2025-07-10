@@ -20,8 +20,18 @@ export async function GET(
         subtitulo: true,
         texto: true,
         estrutura: true,
-        createdAt: true
-      },
+        createdAt: true,
+        perguntas: {
+          select: {
+            id: true,
+          }
+        },
+        flashcards: {
+          select: {
+            id: true,
+          }
+        }
+      }
     })
 
     if (!summary) {
