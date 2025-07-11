@@ -128,7 +128,7 @@ export async function POST(req: Request) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'mistralai/devstral-small:free',
+      model: 'deepseek/deepseek-r1:free',
       messages: [{ role: 'user', content: prompt }],
     }),
   })
