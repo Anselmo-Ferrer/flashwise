@@ -2,7 +2,6 @@
 
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { json, text } from "stream/consumers"
 
 export default function CreateQuizPage() {
   const { id } = useParams()
@@ -49,7 +48,7 @@ export default function CreateQuizPage() {
     })
 
     if (saveRes.ok) {
-      router.push(`/dashboard/summary/${id}/quiz`)
+      router.push(`/dashboard/summary/quiz/${id}`)
     } else {
       alert('Erro ao salvar flashcards no banco')
     }
