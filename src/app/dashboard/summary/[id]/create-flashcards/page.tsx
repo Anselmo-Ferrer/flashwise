@@ -61,7 +61,7 @@ export default function CreateFlashcardsPage() {
     })
 
     if (saveRes.ok) {
-      router.push(`/dashboard/summary/${id}/flashcards`)
+      router.push(`/dashboard/summary/flashcards/${id}`)
     } else {
       alert('Erro ao salvar flashcards no banco')
     }
