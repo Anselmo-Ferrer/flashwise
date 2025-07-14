@@ -14,7 +14,7 @@ export default function ScrollView({ children, className = '', direction = 'vert
     <div
       className={clsx(
         'overflow-auto rounded-xl',
-        direction === 'vertical' && 'max-h-[550px]',
+        direction === 'vertical' && 'max-h-[2000px]',
         direction === 'horizontal' && 'whitespace-nowrap overflow-x-auto',
         className
       )}
