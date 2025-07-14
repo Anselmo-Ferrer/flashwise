@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function QuizPage() {
   const { id } = useParams()
@@ -59,10 +60,15 @@ export default function QuizPage() {
     }
   }
 
-  if (loading) return <p className="p-8">Carregando...</p>
+  if (loading) return (
+    <div className="flex flex-wrap justify-center w-full h-fit gap-2">
+      <Skeleton className='w-full h-[350px] rounded-xl mt-5 rounded-xl'/>
+      <Skeleton className='w-full h-[350px] rounded-xl mt-5 rounded-xl'/>
+    </div>
+  )
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="py-8 space-y-8">
       {perguntas.map((pergunta: any, index: number) => (
         <div key={index} className="bg-white rounded-xl shadow p-4">
           <p className="text-black font-semibold">{index + 1}. {pergunta.enunciado}</p>
